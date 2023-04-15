@@ -1,3 +1,3 @@
 resource "aws_s3_bucket" "airflow_dags" {
-  bucket = "airflow-dags"
+  bucket = "airflow-dags-poc"
 }
