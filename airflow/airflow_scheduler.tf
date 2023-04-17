@@ -34,7 +34,7 @@ resource "aws_ecs_task_definition" "scheduler" {
   volume {
     name  = var.volume_efs_name
     efs_volume_configuration {
-      file_system_id = aws_efs_file_system.foo.id
+      file_system_id = aws_efs_file_system.airflow_efs.id
       root_directory = var.volume_efs_root_directory
     }
   }
@@ -44,7 +44,7 @@ resource "aws_ecs_task_definition" "scheduler" {
        ecr_image          = "${aws_ecr_repository.docker_repository.repository_url}:latest",
        port               = 80
        stage              = var.stage
-       db_credentials     = "airflow:${random_string.metadata_db_password.result}@${aws_db_instance.metadata_db.address}:5432/airflow"
+       db_credentials     = "${var.postgres_username}:${data.aws_secretsmanager_secret_version.airflow_postgres_pwd.secret_string}@${aws_db_instance.metadata_db.address}:5432/airflow"
        redis_url          = "${aws_elasticache_cluster.celery_backend.cache_nodes.0.address}:6379"
        awslogs_group      = "${var.log_group_name}/${var.project_name}-${var.stage}",
        awslogs_region     = var.aws_region

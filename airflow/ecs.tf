@@ -1,5 +1,6 @@
 resource "aws_ecr_repository" "docker_repository" {
-    name = "${var.project_name}-${var.stage}"
+  name         = "${var.project_name}-${var.stage}"
+  force_delete = true
 }
 
 resource "aws_ecr_lifecycle_policy" "docker_repository_lifecycle" {
@@ -30,17 +31,17 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  name = "${var.log_group_name}/${var.project_name}-${var.stage}"
+  name              = "${var.log_group_name}/${var.project_name}-${var.stage}"
   retention_in_days = 1
 }
 
 resource "aws_cloudwatch_log_group" "log_group_tasks" {
-  name = "${var.project_name}-${var.stage}-tasks"
+  name              = "${var.project_name}-${var.stage}-tasks"
   retention_in_days = 1
 }
 
 resource "aws_iam_role" "ecs_task_iam_role" {
-  name = "${var.project_name}-${var.stage}-ecs-task-role"
+  name        = "${var.project_name}-${var.stage}-ecs-task-role"
   description = "Allow ECS tasks to access AWS resources"
 
   assume_role_policy = <<EOF
@@ -62,7 +63,7 @@ EOF
 
 
 resource "aws_iam_policy" "ecs_task_policy" {
-  name        = "${var.project_name}-${var.stage}"
+  name = "${var.project_name}-${var.stage}"
 
   policy = <<EOF
 {
@@ -95,6 +96,20 @@ resource "aws_iam_policy" "ecs_task_policy" {
     {
       "Action": [
         "elasticfilesystem:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "secretsmanager:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "ssm:*"
       ],
       "Effect": "Allow",
       "Resource": "*"

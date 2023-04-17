@@ -15,6 +15,10 @@ variable "stage" {
    default = "dev"
 }
 
+variable "postgres_username" {
+   default = "airflow"
+}
+
 variable "base_cidr_block" {
    default = "10.0.0.0"
 }
@@ -45,4 +49,12 @@ variable "volume_efs_root_directory" {
 
 variable "airflow_local_folder_dags" {
    default = "/usr/local/airflow/dags"
+}
+
+variable "airflow_user" {
+   default = "airflow"
+}
+
+variable "airflow_email" {
+   default = "brunomachadoabreu@gmail.com"
 }

@@ -1,4 +1,4 @@
-resource "aws_efs_file_system" "foo" {
+resource "aws_efs_file_system" "airflow_efs" {
   creation_token = "airflow-ecs"
   tags = {
     Name = "ECS-EFS-AIRFLOW"
@@ -6,26 +6,26 @@ resource "aws_efs_file_system" "foo" {
 }
 
 resource "aws_efs_mount_target" "mount-a" {
-  file_system_id = aws_efs_file_system.foo.id
+  file_system_id = aws_efs_file_system.airflow_efs.id
   subnet_id      = aws_subnet.public-subnet-1.id
   security_groups = [aws_security_group.efs_sg.id]
 }
 
 resource "aws_efs_mount_target" "mount-b" {
-  file_system_id = aws_efs_file_system.foo.id
+  file_system_id = aws_efs_file_system.airflow_efs.id
   subnet_id      =  aws_subnet.public-subnet-2.id
   security_groups = [aws_security_group.efs_sg.id]
 }
 
 resource "aws_efs_mount_target" "mount-c" {
-  file_system_id = aws_efs_file_system.foo.id
+  file_system_id = aws_efs_file_system.airflow_efs.id
   subnet_id      =  aws_subnet.public-subnet-3.id
   security_groups = [aws_security_group.efs_sg.id]
 }
 
 
 resource "aws_efs_file_system_policy" "policy" {
-  file_system_id = aws_efs_file_system.foo.id
+  file_system_id = aws_efs_file_system.airflow_efs.id
 
   policy = <<POLICY
 {
@@ -38,7 +38,7 @@ resource "aws_efs_file_system_policy" "policy" {
             "Principal": {
                 "AWS": "*"
             },
-            "Resource": "${aws_efs_file_system.foo.arn}",
+            "Resource": "${aws_efs_file_system.airflow_efs.arn}",
             "Action": [
                 "elasticfilesystem:*"
             ]
