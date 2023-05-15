@@ -23,6 +23,21 @@ resource "aws_efs_mount_target" "mount-c" {
   security_groups = [aws_security_group.efs_sg.id]
 }
 
+resource "aws_efs_access_point" "efs-access-point" {
+  posix_user {
+    gid = 0
+    uid = 0
+  }
+  root_directory {
+    creation_info {
+      owner_gid   = 0
+      owner_uid   = 0
+      permissions = 777
+    }
+    path = var.volume_efs_root_directory
+  }
+  file_system_id = aws_efs_file_system.airflow_efs.id
+}
 
 resource "aws_efs_file_system_policy" "policy" {
   file_system_id = aws_efs_file_system.airflow_efs.id

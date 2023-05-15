@@ -44,7 +44,7 @@ variable "volume_efs_name" {
 }
 
 variable "volume_efs_root_directory" {
-   default = "/data/airflow"
+   default = "/"
 }
 
 variable "airflow_local_folder_dags" {

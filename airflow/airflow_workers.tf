@@ -8,8 +8,6 @@ resource "aws_security_group" "workers" {
         to_port = 0
         protocol = "-1"
         cidr_blocks = ["0.0.0.0/0"]
-
-
     }
 
     egress {
@@ -52,6 +50,11 @@ resource "aws_ecs_task_definition" "workers" {
     efs_volume_configuration {
       file_system_id = aws_efs_file_system.airflow_efs.id
       root_directory = var.volume_efs_root_directory
+      transit_encryption = "ENABLED"
+      authorization_config {
+        access_point_id = aws_efs_access_point.efs-access-point.id
+        iam = "ENABLED"
+      }
     }
   }
 
